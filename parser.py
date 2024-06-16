@@ -26,34 +26,35 @@ class HTMLParser:
             i += 1
         return len(self.stack) == 0
 
-    def is_valid_html_structure(self, html):
-        if not self.is_valid_html(html):
+    def is_valid_html_structure(self, html): #memeriksa struktur dokumen HTML untuk memastikan elemen-elemen dasar ada dan berurutan dengan benar.
+        if not self.is_valid_html(html): # memastikan bahwa tag HTML berpasangan dengan benar
             return False
-        if '<html>' not in html or '</html>' not in html:
+        if '<html>' not in html or '</html>' not in html: #Memeriksa apakah tag pembuka <html> dan tag penutup </html> ada di dalam string html
             return False
         head_start = html.find('<head>')
         head_end = html.find('</head>')
         body_start = html.find('<body>')
-        body_end = html.find('</body>')
+        body_end = html.find('</body>') #Mencari posisi awal dan akhir dari tag <head> dan </head>, serta <body> dan </body>, dalam string html
 
         if head_start != -1 and (head_end == -1 or head_end < head_start):
-            return False
+            return False #Memeriksa apakah tag <head> ada tanpa tag penutup </head> yang benar atau urutan tag <head> salah
         if body_start != -1 and (body_end == -1 or body_end < body_start):
-            return False
+            return False #Mengecek kaklau tanda tag body ada tanpa tag penutup /body yang benar atau urutan tag body salah
         if head_end != -1 and body_start != -1 and head_end > body_start:
-            return False
+            return False #Memeriksa apakah urutan tag <head> dan <body> tidak tumpang tindih.
 
         return True
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 2: #Memeriksa apakah jumlah argumen baris perintah kurang dari 2
         print("Usage: python program.py input.html")
-        sys.exit(1)
+        sys.exit(1) #Jika ya, mencetak pesan penggunaan dan keluar dari program dengan kode status 1.
 
-    input_file = sys.argv[1]
+
+    input_file = sys.argv[1] #Mendapatkan nama file dari argumen baris perintah.
     with open(input_file, 'r') as file:
-        html = file.read()
+        html = file.read() #Membuka file dengan nama yang diberikan dalam mode baca ('r') dan membaca seluruh kontennya ke dalam variabel html.
 
-    parser = HTMLParser()
-    result = parser.is_valid_html_structure(html)
-    print(f"Input file {input_file}: {'Accepted' if result else 'Rejected'}")
+    parser = HTMLParser() #Membuat instance dari kelas HTMLParser.
+    result = parser.is_valid_html_structure(html)  #memanggil fungsi is valid structure
+    print(f"Input file {input_file}: {'Accepted' if result else 'Rejected'}")  #output acc kl struktur HTML valid, rejected kl ga valid
